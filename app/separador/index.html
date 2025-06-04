@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Separador de Pedidos - Chique App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8fafc;
+    }
+
+    .order-card {
+      transition: all 0.3s ease;
+    }
+
+    .order-card.removing {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    .empty-state {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+  <div class="container mx-auto px-4 py-6 max-w-3xl">
+
+    <header class="mb-6">
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-purple-900" id="nome-loja">Chique Drinks</h1>
+        <div class="flex flex-col items-center">
+          <div class="bg-purple-100 px-4 py-2 rounded-full mb-2">
+            <span class="text-purple-800 font-medium" id="current-time">15:45</span>
+          </div>
+          <a href="/" title="Sair" class="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full hover:bg-red-200 transition-colors">
+            Sair
+          </a>
+        </div>
+      </div>
+      <p class="text-gray-600 text-lg">Separar pedidos</p>
+    </header>
+
+    <main>
+
+      <div id="orders-container" class="space-y-4">
+        <!-- Os cards de pedidos serão inseridos aqui via JavaScript -->
+      </div>
+
+      <div id="empty-state" class="empty-state mt-10 text-center py-16 bg-white rounded-xl shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-indigo-300" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <h2 class="mt-4 text-xl font-semibold text-indigo-800">Todos os pedidos entregues!</h2>
+        <p class="mt-2 text-slate-500">Não há pedidos pendentes para entrega no momento.</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="./js/script.js"></script>
+</body>
+
+</html>

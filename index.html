@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escolha a Loja</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+    }
+
+    .card {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #1a202c;
+    }
+
+    .card, .card * {
+      color: #1a202c !important;
+      text-shadow: none !important;
+    }
+
+    .btn-loja, .btn-funcao, .btn-admin {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .btn-loja::before, .btn-funcao::before, .btn-admin::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: -1;
+      transition: width 0.3s ease;
+    }
+
+    .btn-loja:hover::before, .btn-funcao:hover::before, .btn-admin:hover::before {
+      width: 100%;
+    }
+
+    .btn-loja:hover, .btn-funcao:hover, .btn-admin:hover {
+      transform: translateY(-5px);
+    }
+
+    .page-transition {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #ae21ff, #45b1ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      color: unset !important;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+
+<body class="flex items-center justify-center p-4">
+  <div class="card rounded-2xl p-8 w-full max-w-md">
+    <div class="logo text-center">Chique Drinks</div>
+    
+    <div id="page-lojas" class="page-transition">
+      <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Qual será a loja?</h1>
+      <div id="lojas-list" class="space-y-4"></div>
+      <div class="mt-8">
+        <button class="btn-admin w-full py-4 px-6 rounded-xl text-gray-900 font-bold flex items-center justify-between gradient-admin" id="admin-btn">
+          <span class="flex items-center">
+            <span class="icon mr-3">🛠️</span>
+            Admin
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="page-funcoes" class="page-transition hidden">
+      <div class="flex items-center mb-8">
+        <button id="back-button" class="mr-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h1 class="text-3xl font-bold text-center text-gray-800 flex-1">Escolha a Função</h1>
+      </div>
+      <div id="funcoes-list" class="space-y-4"></div>
+    </div>
+
+    <div id="loading" class="hidden flex-col items-center justify-center py-8">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+      <p class="text-gray-600">Processando sua seleção...</p>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+    // Dados das lojas e funções
+    // Só precisa definir a cor principal (hex ou rgb)
+    const lojas = [
+      {
+        id: 'classicos',
+        label: 'Drinks Clássicos',
+        icon: '🍹',
+        color: '#FF6A88'
+      },
+      {
+        id: 'shakes',
+        label: 'Drinks Shake',
+        icon: '🥤',
+        color: '#59C173'
+      },
+      {
+        id: 'tematicos',
+        label: 'Drinks Temáticos',
+        icon: '🎭',
+        color: '#4ECDC4'
+      }
+    ];
+
+    const funcoes = [
+      {
+        id: 'atendente',
+        label: 'Atendente',
+        icon: '🛎️',
+        color: '#FD6585'
+      },
+      {
+        id: 'cozinheiro',
+        label: 'Cozinheiro',
+        icon: '🧑‍🍳',
+        color: '#28C76F'
+      },
+      {
+        id: 'separador',
+        label: 'Separador',
+        icon: '📦',
+        color: '#FF9F43'
+      }
+    ];
+
+    // Função para gerar gradiente automático a partir da cor principal
+    function gradientePrincipal(cor) {
+      // Usa a cor principal e uma versão mais clara dela
+      return `background: linear-gradient(135deg, ${cor} 50%, #eee 100%);`;
+    }
+
+    $(document).ready(function () {
+      let selectedLoja = '';
+
+      // Renderiza os botões de loja
+      lojas.forEach(loja => {
+        $('#lojas-list').append(`
+          <button class="btn-loja w-full py-4 px-6 rounded-xl text-gray-900 font-medium flex items-center justify-between"
+            style="${gradientePrincipal(loja.color)}"
+            data-id="${loja.id}" data-label="${loja.label}">
+            <span class="flex items-center">
+              <span class="icon mr-3">${loja.icon}</span>
+              ${loja.label}
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        `);
+      });
+
+      // Renderiza os botões de função
+      funcoes.forEach(funcao => {
+        $('#funcoes-list').append(`
+          <button class="btn-funcao w-full py-4 px-6 rounded-xl text-gray-900 font-medium flex items-center justify-between"
+            style="${gradientePrincipal(funcao.color)}"
+            data-id="${funcao.id}" data-label="${funcao.label}">
+            <span class="flex items-center">
+              <span class="icon mr-3">${funcao.icon}</span>
+              ${funcao.label}
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        `);
+      });
+
+      // Clique nas lojas
+      $(document).on('click', '.btn-loja', function () {
+        selectedLoja = $(this).data('label');
+        $('#page-lojas').fadeOut(300, function () {
+          $('#page-funcoes').fadeIn(300);
+        });
+      });
+
+      // Clique no botão admin
+      $('#admin-btn').on('click', function () {
+        window.location.href = '/app/admin';
+      });
+
+      // Voltar para lojas
+      $('#back-button').on('click', function () {
+        $('#page-funcoes').fadeOut(300, function () {
+          $('#page-lojas').fadeIn(300);
+        });
+      });
+
+      // Clique nas funções
+      $(document).on('click', '.btn-funcao', function () {
+        const funcao = $(this).data('label');
+        $('#page-funcoes').fadeOut(300, function () {
+          $('#loading').fadeIn(300);
+
+          $.ajax({
+            url: '/api/login/',
+            type: 'POST',
+            data: {
+              loja: selectedLoja,
+              funcao: funcao
+            },
+            success: function (response) {
+              window.location.href = '/app/';
+              setTimeout(function () {
+                window.location.href = '/';
+              }, 1000);
+            },
+            error: function (error) {
+              $('#loading').fadeOut(300, function () {
+                alert('Erro ao enviar os dados. Tente novamente.');
+                $('#page-funcoes').fadeIn(300);
+              });
+            }
+          });
+        });
+      });
+    });
+  </script>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozinha - Chique App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      touch-action: manipulation;
+    }
+
+    .drink-item {
+      transition: transform 0.3s ease;
+      position: relative;
+      touch-action: pan-x;
+    }
+
+    .check-button {
+      position: absolute;
+      right: -60px;
+      top: 0;
+      height: 100%;
+      width: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #10b981;
+      color: white;
+      border-radius: 0 8px 8px 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .drink-item.swiped {
+      transform: translateX(-60px);
+    }
+
+    .drink-item.swiped .check-button {
+      opacity: 1;
+    }
+
+    .drink-item.completed {
+      text-decoration: line-through;
+      color: #9ca3af;
+    }
+
+    .order-card {
+      transition: all 0.5s ease;
+    }
+
+    .order-card.removing {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+
+    .progress-bar {
+      transition: width 0.3s ease;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="min-h-screen">
+  <div class="container mx-auto px-4 py-6 max-w-3xl">
+
+    <header class="mb-6">
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-purple-900" id="nome-loja">Chique Drinks</h1>
+        <div class="flex flex-col items-center">
+          <div class="bg-purple-100 px-4 py-2 rounded-full mb-2">
+            <span class="text-purple-800 font-medium" id="current-time">15:45</span>
+          </div>
+          <a href="/" title="Sair" class="px-3 py-1 text-xs bg-red-100 text-red-700 rounded-full hover:bg-red-200 transition-colors">
+            Sair
+          </a>
+        </div>
+      </div>
+      <p class="text-gray-600 text-lg">Pedidos da Cozinha</p>
+    </header>
+
+    <div id="orders-container" class="space-y-6">
+      <!-- Os pedidos serão inseridos aqui dinamicamente -->
+    </div>
+
+    <div id="no-orders" class="hidden mt-12 text-center py-8">
+      <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p class="mt-4 text-xl text-gray-500">Todos os pedidos foram concluídos!</p>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="./js/script.js"></script>
+</body>
+</html>
