@@ -5,11 +5,6 @@
     //* Define as variáveis de ambiente por ordem de prioridade
     $root = $_SERVER['DOCUMENT_ROOT'];
 
-    //? Verifica se tem public_html no caminho (apenas em produção)
-    if (strpos($root, '/public_html') !== false) {
-      $root = substr($root, 0, strpos($root, '/public_html'));
-    }
-
     $root .= '/.env.prod';
 
     $env = [
