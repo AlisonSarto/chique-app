@@ -18,6 +18,13 @@
     ]);
   }
 
+  if ($id == 9999) {
+    send([
+      'status' => 400,
+      'message' => 'Você não pode deletar a bebida especial.'
+    ]);
+  }
+
   $sql = "DELETE FROM drinks WHERE id = '$id'";
   $res = $conn->query($sql);
 
