@@ -267,7 +267,6 @@ $('#confirm-order').on('click', function () {
   console.log('Dados do pedido:', data);
 
   // Enviar pedido para o servidor
-  $fidelidade = [];
   $.ajax({
     url: '/api/pedidos/create',
     method: 'POST',
@@ -276,6 +275,7 @@ $('#confirm-order').on('click', function () {
     success: function (response) {
       console.log('Pedido enviado com sucesso:', response);
       currentCustomer.lojasVisitadas = response.fidelidade;
+      currentCustomer.ganhouBrinde = response.ganhou_brinde; // <-- pega o status do brinde
     },
     error: function (err) {
       console.error('Erro ao enviar pedido:', err);
@@ -294,8 +294,16 @@ $('#confirm-order').on('click', function () {
     const completouFidelidade = lojasFidelidade.every(loja => currentCustomer.lojasVisitadas.includes(loja.nome));
 
     $('#loyalty-info').removeClass('hidden');
-    if (completouFidelidade) {
-      $('#loyalty-message').text('Parabéns! Você ganhou uma bebida grátis por visitar todas as lojas!');
+    if (completouFidelidade && currentCustomer.ganhouBrinde) {
+      $('#loyalty-message').html(`
+        <div class="brinde-highlight">
+          Parabéns! Você ganhou um brinde por visitar todas as lojas!
+        </div>
+      `);
+      $('#loyalty-stamps').addClass('hidden');
+    } else if (completouFidelidade) {
+      $('#loyalty-message').text('Você já ganhou sua bebida grátis por visitar todas as lojas!');
+      $('#loyalty-stamps').addClass('hidden');
     } else {
       const faltam = lojasFidelidade.filter(loja => !currentCustomer.lojasVisitadas.includes(loja.nome));
       $('#loyalty-message').text(`Faltam ${faltam.length} loja(s) para ganhar uma bebida grátis!`);
@@ -335,4 +343,3 @@ $('#new-order').on('click', function () {
 });
 
 $('#try-again').on('click', function () { showPage(3); });
-

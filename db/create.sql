@@ -13,6 +13,7 @@ CREATE TABLE customers (
   `Drinks Clássicos` VARCHAR(45) DEFAULT 'false',
   `Drinks Temáticos` VARCHAR(45) DEFAULT 'false',
   `Drinks Shakes` VARCHAR(45) DEFAULT 'false',
+  `fidelidade_brinde` ENUM('false','true') DEFAULT 'false';
   PRIMARY KEY (`phone`)
 );
 

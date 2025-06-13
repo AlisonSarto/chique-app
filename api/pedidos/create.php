@@ -83,8 +83,8 @@
     }
   } while ($conn->more_results() && $conn->next_result());
 
-
   $fidelidade = [];
+  $ganhou_brinde = false;
   if ($phone != "anonimo") {
 
     //? Atualiza o status da fidelidade
@@ -104,13 +104,20 @@
       }
     }
 
+    //? Se completou as 3 lojas e ainda não ganhou o brinde, marca como recebido
+    if (count($fidelidade) === 3 && ($customer['fidelidade_brinde'] ?? 'false') === 'false') {
+      $sql = "UPDATE customers SET fidelidade_brinde = 'true' WHERE phone = '$phone'";
+      $conn->query($sql);
+      $ganhou_brinde = true;
+    }
   }
-
+  
   send([
     'status' => 200,
     'message' => 'Pedido criado com sucesso.',
     'pedido_id' => $pedido_id,
     'fidelidade' => $fidelidade,
+    'ganhou_brinde' => $ganhou_brinde,
   ]);
 
 ?>
